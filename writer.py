@@ -7,8 +7,8 @@ path = sys.argv[1]
 r, w = os.pipe()
 
 def write():
-    with os.fdopen(w, 'w') as writer:
-        with open(path) as reader:
+    with os.fdopen(w, 'wb') as writer:
+        with open(path, 'rb') as reader:
             while True:
                 data = reader.read(10*1024*1024)
                 if not data:
@@ -19,7 +19,13 @@ def write():
 
 thread = threading.Thread(target=write)
 thread.start()
-process = subprocess.Popen(['python', 'reader.py', str(r)])
+
+cmd = [sys.executable, 'reader.py', str(r)]
+if (sys.version_info > (3, 0)):
+    process = subprocess.Popen(cmd, pass_fds=[r])
+else:
+    process = subprocess.Popen(cmd)
+
 os.close(r)
 thread.join()
 process.communicate()

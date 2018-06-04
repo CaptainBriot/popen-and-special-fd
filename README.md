@@ -18,5 +18,6 @@ python writer.py smalldata
 python writer.py bigdata
 ```
 
-Notes: Step 3 will often block but sometimes will finish. Step 4 always blocks.
+Note 1: With Python 2.7, step 3 will often block forever but sometimes will finish and step 4 will always block forever.
+Note 2: Using Python 3.6, both step 3 and 4 pass without blocking.
 
