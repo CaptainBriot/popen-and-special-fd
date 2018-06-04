@@ -1,7 +1,8 @@
 import os
-import subprocess
 import threading
 import sys
+
+import subprocess32 as subprocess
 
 path = sys.argv[1]
 r, w = os.pipe()
@@ -21,10 +22,7 @@ thread = threading.Thread(target=write)
 thread.start()
 
 cmd = [sys.executable, 'reader.py', str(r)]
-if (sys.version_info > (3, 0)):
-    process = subprocess.Popen(cmd, pass_fds=[r])
-else:
-    process = subprocess.Popen(cmd)
+process = subprocess.Popen(cmd, pass_fds=[r])
 
 os.close(r)
 thread.join()
