@@ -2,7 +2,10 @@ import os
 import threading
 import sys
 
-import subprocess32 as subprocess
+try:
+    import subprocess32 as subprocess
+except ImportError:
+    import subprocess
 
 path = sys.argv[1]
 r, w = os.pipe()
@@ -22,7 +25,10 @@ thread = threading.Thread(target=write)
 thread.start()
 
 cmd = [sys.executable, 'reader.py', str(r)]
-process = subprocess.Popen(cmd, pass_fds=[r])
+try:
+    process = subprocess.Popen(cmd, pass_fds=[r])
+except TypeError:
+    process = subprocess.Popen(cmd)
 
 os.close(r)
 thread.join()
